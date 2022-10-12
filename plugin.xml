@@ -1,7 +1,7 @@
 <library path="src">
-  <class name="Autonomous Navigation GUI" type="autonomous_nav_gui.autonomous_nav_gui_module.AutonomousNavGuiPlugin" base_class_type="rqt_gui_py::Plugin">
+  <class name="My Plugin" type="rqt_autonomous_nav.autonomous_nav_module.MyPlugin" base_class_type="rqt_gui_py::Plugin">
     <description>
-      GUI to operate the autonomous navigation of the Zeus rover.
+      An example Python GUI plugin to create a great user interface.
     </description>
     <qtgui>
       <!-- optional grouping...
@@ -12,9 +12,9 @@
         <label>Subgroup</label>
       </group>
       -->
-      <label>GUI to operate the autonomous navigation of the Zeus rover.</label>
+      <label>My first Python Plugin</label>
       <icon type="theme">system-help</icon>
-      <statustip>GUI to operate the autonomous navigation of the Zeus rover.</statustip>
+      <statustip>Great user interface to provide real value.</statustip>
     </qtgui>
   </class>
 </library>

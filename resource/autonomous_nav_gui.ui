@@ -19,14 +19,14 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="importListButton">
          <property name="text">
           <string>Import List</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_2">
+        <widget class="QPushButton" name="exportListButton">
          <property name="text">
           <string>Export List</string>
          </property>
@@ -42,28 +42,28 @@
        <item row="0" column="1">
         <layout class="QVBoxLayout" name="verticalLayout_3">
          <item>
-          <widget class="QPushButton" name="pushButton_6">
+          <widget class="QPushButton" name="removeButton">
            <property name="text">
             <string>Remove</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_8">
+          <widget class="QPushButton" name="moveUpButton">
            <property name="text">
             <string>Move Up</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_7">
+          <widget class="QPushButton" name="moveDownButton">
            <property name="text">
             <string>Move Down</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_5">
+          <widget class="QPushButton" name="setActiveGoalButton">
            <property name="minimumSize">
             <size>
              <width>0</width>
@@ -78,7 +78,7 @@
         </layout>
        </item>
        <item row="0" column="0">
-        <widget class="QListView" name="listView"/>
+        <widget class="QListWidget" name="goalListWidget"/>
        </item>
       </layout>
      </item>
@@ -99,7 +99,7 @@
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QComboBox" name="comboBox"/>
+        <widget class="QComboBox" name="goalTypeComboBox"/>
        </item>
        <item row="1" column="0">
         <widget class="QLabel" name="label_2">
@@ -109,7 +109,7 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
+        <widget class="QDoubleSpinBox" name="latitudeSpinBox"/>
        </item>
        <item row="2" column="0">
         <widget class="QLabel" name="label_3">
@@ -119,10 +119,10 @@
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QDoubleSpinBox" name="doubleSpinBox_2"/>
+        <widget class="QDoubleSpinBox" name="longitudeSpinBox"/>
        </item>
        <item row="3" column="0" colspan="2">
-        <widget class="QPushButton" name="pushButton_9">
+        <widget class="QPushButton" name="addGoalButton">
          <property name="text">
           <string>Add goal to list</string>
          </property>
@@ -150,7 +150,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
-        <widget class="QPushButton" name="pushButton_4">
+        <widget class="QPushButton" name="startNavButton">
          <property name="minimumSize">
           <size>
            <width>100</width>
@@ -189,7 +189,7 @@ QPushButton:pressed {
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_3">
+        <widget class="QPushButton" name="stopNavButton">
          <property name="minimumSize">
           <size>
            <width>100</width>
@@ -269,7 +269,7 @@ border-color: black
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label_4">
+        <widget class="QLabel" name="roverStateLabel">
          <property name="font">
           <font>
            <pointsize>10</pointsize>
@@ -301,7 +301,7 @@ border-color: black
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label_8">
+        <widget class="QLabel" name="distanceToGoalLabel">
          <property name="font">
           <font>
            <pointsize>10</pointsize>
@@ -340,7 +340,7 @@ border-color: black
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QLabel" name="label_11">
+        <widget class="QLabel" name="goalTypeLabel">
          <property name="font">
           <font>
            <pointsize>10</pointsize>
@@ -361,7 +361,7 @@ border-color: black
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QLabel" name="label_13">
+        <widget class="QLabel" name="coordinateLabel">
          <property name="font">
           <font>
            <pointsize>10</pointsize>
@@ -393,7 +393,7 @@ border-color: black
         </widget>
        </item>
        <item>
-        <widget class="QTextBrowser" name="textBrowser"/>
+        <widget class="QTextBrowser" name="logTextBrowser"/>
        </item>
        <item>
         <spacer name="verticalSpacer_2">

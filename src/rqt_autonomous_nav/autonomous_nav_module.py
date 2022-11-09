@@ -49,6 +49,8 @@ class MyPlugin(Plugin):
         self._widget.importListButton.clicked.connect(self.import_list) 
         self._widget.exportListButton.clicked.connect(self.export_list)
         self._widget.removeButton.clicked.connect(self.remove_item)
+        self._widget.moveUpButton.clicked.connect(self.move_up_item)
+        self._widget.moveDownButton.clicked.connect(self.move_down_item)
 
     def shutdown_plugin(self):
         # TODO unregister all publishers here
@@ -86,14 +88,12 @@ class MyPlugin(Plugin):
             for i, row in enumerate(csv_reader):
                 if (i != 0):
                     self.goal_list.append(row)
-        print(self.goal_list)
         self.show_goal_list()
 
     def show_goal_list(self):
         self._widget.goalListWidget.clear()
         for i, row in enumerate(self.goal_list):
             text = '[' + str(i) + '] ' + ' '.join(row)
-            print(text)
             self._widget.goalListWidget.addItem(QListWidgetItem(text))
 
     def export_list(self):
@@ -120,3 +120,17 @@ class MyPlugin(Plugin):
         self.goal_list.pop(row)
         self.show_goal_list()
 
+    def move_up_item(self):
+        self.move_item(-1)
+
+    def move_down_item(self):
+        self.move_item(1)
+
+    def move_item(self, moving_distance):
+        row = self._widget.goalListWidget.currentRow()
+        new_row = row + moving_distance
+        if not (new_row < 0 or new_row >=len(self.goal_list)):
+            item = self.goal_list.pop(row)
+            self.goal_list.insert(new_row, item)
+            self.show_goal_list()
+            self._widget.goalListWidget.setCurrentRow(new_row)

@@ -51,6 +51,7 @@ class MyPlugin(Plugin):
         self._widget.removeButton.clicked.connect(self.remove_item)
         self._widget.moveUpButton.clicked.connect(self.move_up_item)
         self._widget.moveDownButton.clicked.connect(self.move_down_item)
+        self._widget.addGoalButton.clicked.connect(self.add_goal)
 
     def shutdown_plugin(self):
         # TODO unregister all publishers here
@@ -116,9 +117,13 @@ class MyPlugin(Plugin):
                 csv_writer.writerow(row)
 
     def remove_item(self):
-        row = self._widget.goalListWidget.currentRow()
-        self.goal_list.pop(row)
-        self.show_goal_list()
+        if not len(self.goal_list) == 0:
+            row = self._widget.goalListWidget.currentRow()
+            self.goal_list.pop(row)
+            self.show_goal_list()
+            if row >= len(self.goal_list):
+                row -= 1
+            self._widget.goalListWidget.setCurrentRow(row)
 
     def move_up_item(self):
         self.move_item(-1)
@@ -134,3 +139,11 @@ class MyPlugin(Plugin):
             self.goal_list.insert(new_row, item)
             self.show_goal_list()
             self._widget.goalListWidget.setCurrentRow(new_row)
+
+    def add_goal(self):
+        type = str(self._widget.goalTypeComboBox.currentIndex())
+        lat = str(self._widget.latitudeSpinBox.value())
+        long = str(self._widget.longitudeSpinBox.value())
+        item = [type, lat, long]
+        self.goal_list.append(item)
+        self.show_goal_list()

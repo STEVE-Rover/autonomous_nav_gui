@@ -7,6 +7,7 @@ from python_qt_binding import loadUi
 from python_qt_binding.QtWidgets import QWidget, QFileDialog, QListWidgetItem
 from goal_manager.srv import SetGpsGoalList, SetGoalIndex
 from goal_manager.msg import GpsGoal
+from actionlib_msgs.msg import GoalID
 
 class MyPlugin(Plugin):
 
@@ -48,8 +49,11 @@ class MyPlugin(Plugin):
         self.goal_list = []
 
         # Service clients
-        #rospy.wait_for_service('goal_manager/gps_goals_list')
-        self.set_goals_list_srv = rospy.ServiceProxy('goal_manager/gps_goals_list', SetGpsGoalList)
+        self.set_active_goal_srv = rospy.ServiceProxy('goal_manager/gps_goals_list', SetGpsGoalList)
+        self.start_nav_srv = rospy.ServiceProxy('goal_manager/navigate_to_goal', SetGoalIndex)
+
+        # Topics
+        self.cancel_nav_pub = rospy.Publisher("/move_base/cancel", GoalID, queue_size=1)
 
         # Connect buttons
         self._widget.importListButton.clicked.connect(self.import_list) 
@@ -59,6 +63,8 @@ class MyPlugin(Plugin):
         self._widget.moveDownButton.clicked.connect(self.move_down_item)
         self._widget.addGoalButton.clicked.connect(self.add_goal)
         self._widget.setActiveGoalButton.clicked.connect(self.set_active_goal)
+        self._widget.startNavButton.clicked.connect(self.start_nav)
+        self._widget.stopNavButton.clicked.connect(self.stop_nav)
 
     def shutdown_plugin(self):
         # TODO unregister all publishers here
@@ -163,6 +169,17 @@ class MyPlugin(Plugin):
                 goal.type = self.goal_list[row][0]
                 goal.latitude = self.goal_list[row][1]
                 goal.longitude = self.goal_list[row][2]
-                self.set_goals_list_srv([goal])
+                self.set_active_goal_srv([goal])
             except rospy.ServiceException as e:
                 print("Service call failed: %s" % e)
+
+    def start_nav(self):
+        rospy.loginfo("Starting navigation")
+        try:
+            self.start_nav_srv(0)
+        except rospy.ServiceException as e:
+                print("Service call failed: %s" % e)
+
+    def stop_nav(self):
+        rospy.loginfo("Stopping navigation")
+        self.cancel_nav_pub.publish(GoalID())

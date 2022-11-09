@@ -5,6 +5,8 @@ import csv
 from qt_gui.plugin import Plugin
 from python_qt_binding import loadUi
 from python_qt_binding.QtWidgets import QWidget, QFileDialog, QListWidgetItem
+from goal_manager.srv import SetGpsGoalList, SetGoalIndex
+from goal_manager.msg import GpsGoal
 
 class MyPlugin(Plugin):
 
@@ -45,6 +47,10 @@ class MyPlugin(Plugin):
 
         self.goal_list = []
 
+        # Service clients
+        #rospy.wait_for_service('goal_manager/gps_goals_list')
+        self.set_goals_list_srv = rospy.ServiceProxy('goal_manager/gps_goals_list', SetGpsGoalList)
+
         # Connect buttons
         self._widget.importListButton.clicked.connect(self.import_list) 
         self._widget.exportListButton.clicked.connect(self.export_list)
@@ -52,6 +58,7 @@ class MyPlugin(Plugin):
         self._widget.moveUpButton.clicked.connect(self.move_up_item)
         self._widget.moveDownButton.clicked.connect(self.move_down_item)
         self._widget.addGoalButton.clicked.connect(self.add_goal)
+        self._widget.setActiveGoalButton.clicked.connect(self.set_active_goal)
 
     def shutdown_plugin(self):
         # TODO unregister all publishers here
@@ -147,3 +154,15 @@ class MyPlugin(Plugin):
         item = [type, lat, long]
         self.goal_list.append(item)
         self.show_goal_list()
+
+    def set_active_goal(self):
+        row = self._widget.goalListWidget.currentRow()
+        if row > 0:
+            try:
+                goal = GpsGoal()
+                goal.type = self.goal_list[row][0]
+                goal.latitude = self.goal_list[row][1]
+                goal.longitude = self.goal_list[row][2]
+                self.set_goals_list_srv([goal])
+            except rospy.ServiceException as e:
+                print("Service call failed: %s" % e)

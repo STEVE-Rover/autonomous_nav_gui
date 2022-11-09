@@ -48,6 +48,7 @@ class MyPlugin(Plugin):
         # Connect buttons
         self._widget.importListButton.clicked.connect(self.import_list) 
         self._widget.exportListButton.clicked.connect(self.export_list)
+        self._widget.removeButton.clicked.connect(self.remove_item)
 
     def shutdown_plugin(self):
         # TODO unregister all publishers here
@@ -113,4 +114,9 @@ class MyPlugin(Plugin):
             csv_writer.writerow(['type', 'latitude', 'longitude'])
             for row in self.goal_list:
                 csv_writer.writerow(row)
+
+    def remove_item(self):
+        row = self._widget.goalListWidget.currentRow()
+        self.goal_list.pop(row)
+        self.show_goal_list()
 

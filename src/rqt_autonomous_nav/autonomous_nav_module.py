@@ -167,13 +167,22 @@ class MyPlugin(Plugin):
 
     def set_active_goal(self):
         row = self._widget.goalListWidget.currentRow()
-        if row > 0:
+        if row >= 0:
             try:
                 goal = GpsGoal()
-                goal.type = self.goal_list[row][0]
-                goal.latitude = self.goal_list[row][1]
-                goal.longitude = self.goal_list[row][2]
+                goal.type = int(self.goal_list[row][0])
+                goal.latitude = float(self.goal_list[row][1])
+                goal.longitude = float(self.goal_list[row][2])
                 self.set_active_goal_srv([goal])
+
+                typeText = "GNSS only"
+                if goal.type == 1:
+                    typeText = "Post"
+                elif goal.type == 2:
+                    typeText = "Gate"
+                    print(typeText)
+                self._widget.goalTypeLabel.setText(typeText)
+                self._widget.coordinateLabel.setText("%s, %s" % (goal.latitude, goal.longitude))
             except rospy.ServiceException as e:
                 print("Service call failed: %s" % e)
 

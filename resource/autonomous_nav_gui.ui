@@ -357,7 +357,7 @@ border-color: black;
           </font>
          </property>
          <property name="text">
-          <string>0.0m</string>
+          <string>-</string>
          </property>
         </widget>
        </item>

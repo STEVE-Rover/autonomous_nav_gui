@@ -8,7 +8,7 @@ from python_qt_binding.QtWidgets import QWidget, QFileDialog, QListWidgetItem
 from goal_manager.srv import SetGpsGoalList, SetGoalIndex
 from goal_manager.msg import GpsGoal
 from actionlib_msgs.msg import GoalID
-from std_msgs.msg import Int8
+from std_msgs.msg import Int8, Float32
 
 class MyPlugin(Plugin):
 
@@ -57,7 +57,8 @@ class MyPlugin(Plugin):
 
         # Topics
         self.cancel_nav_pub = rospy.Publisher("/move_base/cancel", GoalID, queue_size=1)
-        rospy.Subscriber("/goal_manager/state", Int8, self.state_cb)
+        rospy.Subscriber("goal_manager/state", Int8, self.state_cb)
+        rospy.Subscriber("goal_manager/distance_to_goal", Float32, self.distance_to_goal_cb)
 
         # Connect buttons
         self._widget.importListButton.clicked.connect(self.import_list) 
@@ -222,3 +223,6 @@ class MyPlugin(Plugin):
             if "background-color" in line:
                 self.navStateLabelStyleSheet[i] = "background-color: %s;" % new_color
                 break
+
+    def distance_to_goal_cb(self, msg):
+        self._widget.distanceToGoalLabel.setText("%.2f m" % msg.data)

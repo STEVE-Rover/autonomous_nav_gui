@@ -282,7 +282,7 @@ background-color: rgb(255, 137, 137);
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="QLabel" name="label_6">
+        <widget class="QLabel" name="navigationStateBadgeLabel">
          <property name="minimumSize">
           <size>
            <width>30</width>
@@ -296,11 +296,11 @@ background-color: rgb(255, 137, 137);
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: rgb(0, 255, 0);
+          <string notr="true">background-color: grey;
 border-width: 2px;
 border-style: solid;
 border-radius: 15px;
-border-color: black
+border-color: black;
 </string>
          </property>
          <property name="text">
@@ -311,12 +311,12 @@ border-color: black
        <item>
         <widget class="QLabel" name="label_5">
          <property name="text">
-          <string>Rover state:</string>
+          <string>Navigation state:</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="roverStateLabel">
+        <widget class="QLabel" name="navigationStateLabel">
          <property name="font">
           <font>
            <pointsize>10</pointsize>
@@ -325,7 +325,7 @@ border-color: black
           </font>
          </property>
          <property name="text">
-          <string>STATE</string>
+          <string>-</string>
          </property>
         </widget>
        </item>

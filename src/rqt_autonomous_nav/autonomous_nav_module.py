@@ -8,6 +8,7 @@ from python_qt_binding.QtWidgets import QWidget, QFileDialog, QListWidgetItem
 from goal_manager.srv import SetGpsGoalList, SetGoalIndex
 from goal_manager.msg import GpsGoal
 from actionlib_msgs.msg import GoalID
+from std_msgs.msg import Int8
 
 class MyPlugin(Plugin):
 
@@ -46,6 +47,8 @@ class MyPlugin(Plugin):
         # Add widget to the user interface
         context.add_widget(self._widget)
 
+        # Variables
+        self.navStateLabelStyleSheet = self._widget.navigationStateBadgeLabel.styleSheet().split("\n")
         self.goal_list = []
 
         # Service clients
@@ -54,6 +57,7 @@ class MyPlugin(Plugin):
 
         # Topics
         self.cancel_nav_pub = rospy.Publisher("/move_base/cancel", GoalID, queue_size=1)
+        rospy.Subscriber("/goal_manager/state", Int8, self.state_cb)
 
         # Connect buttons
         self._widget.importListButton.clicked.connect(self.import_list) 
@@ -183,3 +187,29 @@ class MyPlugin(Plugin):
     def stop_nav(self):
         rospy.loginfo("Stopping navigation")
         self.cancel_nav_pub.publish(GoalID())
+
+    def state_cb(self, msg):
+        if msg.data == 0:
+            # Off (grey)
+            new_color = "grey"
+            self._widget.navigationStateLabel.setText("-")
+        elif msg.data == 1:
+            # Navigating (red)
+            new_color = "rgb(255, 0, 0)"
+            self._widget.navigationStateLabel.setText("Navigating")
+        elif msg.data == 2:
+            # Teleoperating (blue)
+            new_color = "rgb(0, 0, 255)"
+            self._widget.navigationStateLabel.setText("Teleoperating")
+        elif msg.data == 3:
+            # Goal reached (green)
+            new_color = "rgb(0, 255, 0)"
+            self._widget.navigationStateLabel.setText("Goal Reached")
+        self.change_backgroung_color(new_color)
+        self._widget.navigationStateBadgeLabel.setStyleSheet("\n".join(self.navStateLabelStyleSheet))
+
+    def change_backgroung_color(self, new_color):
+        for i, line in enumerate(self.navStateLabelStyleSheet):
+            if "background-color" in line:
+                self.navStateLabelStyleSheet[i] = "background-color: %s;" % new_color
+                break

@@ -185,6 +185,7 @@ class MyPlugin(Plugin):
                     print(typeText)
                 self._widget.goalTypeLabel.setText(typeText)
                 self._widget.coordinateLabel.setText("%s, %s" % (goal.latitude, goal.longitude))
+                self._widget.goalNumberLabel.setText(str(row))
             except rospy.ServiceException as e:
                 print("Service call failed: %s" % e)
 

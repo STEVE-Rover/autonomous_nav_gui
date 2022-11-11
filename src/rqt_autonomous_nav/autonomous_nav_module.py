@@ -5,7 +5,8 @@ import csv
 from qt_gui.plugin import Plugin
 from python_qt_binding import loadUi
 from python_qt_binding.QtWidgets import QWidget, QFileDialog, QListWidgetItem
-from goal_manager.srv import SetGpsGoalList, SetGoalIndex
+from std_srvs.srv import Empty
+from goal_manager.srv import SetGpsGoal
 from goal_manager.msg import GpsGoal
 from actionlib_msgs.msg import GoalID
 from std_msgs.msg import Int8, Float32
@@ -52,12 +53,12 @@ class MyPlugin(Plugin):
         self.goal_list = []
 
         # Service clients
-        self.set_active_goal_srv = rospy.ServiceProxy('goal_manager/gps_goals_list', SetGpsGoalList)
-        self.start_nav_srv = rospy.ServiceProxy('goal_manager/navigate_to_goal', SetGoalIndex)
+        self.set_active_goal_srv = rospy.ServiceProxy('goal_manager/set_active_goal', SetGpsGoal)
+        self.start_nav_srv = rospy.ServiceProxy('goal_manager/start_navigation', Empty)
 
         # Topics
         self.cancel_nav_pub = rospy.Publisher("/move_base/cancel", GoalID, queue_size=1)
-        rospy.Subscriber("goal_manager/state", Int8, self.state_cb)
+        rospy.Subscriber("/led_controller/color", Int8, self.state_cb)
         rospy.Subscriber("goal_manager/distance_to_goal", Float32, self.distance_to_goal_cb)
 
         # Connect buttons
@@ -174,7 +175,7 @@ class MyPlugin(Plugin):
                 goal.type = int(self.goal_list[row][0])
                 goal.latitude = float(self.goal_list[row][1])
                 goal.longitude = float(self.goal_list[row][2])
-                self.set_active_goal_srv([goal])
+                self.set_active_goal_srv(goal)
 
                 typeText = "GNSS only"
                 if goal.type == 1:
@@ -190,7 +191,7 @@ class MyPlugin(Plugin):
     def start_nav(self):
         rospy.loginfo("Starting navigation")
         try:
-            self.start_nav_srv(0)
+            self.start_nav_srv()
         except rospy.ServiceException as e:
                 print("Service call failed: %s" % e)
 

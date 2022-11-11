@@ -379,14 +379,14 @@ border-color: black;
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
+       <item row="2" column="0">
         <widget class="QLabel" name="label_10">
          <property name="text">
           <string>Type:</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
+       <item row="2" column="1">
         <widget class="QLabel" name="goalTypeLabel">
          <property name="font">
           <font>
@@ -396,18 +396,18 @@ border-color: black;
           </font>
          </property>
          <property name="text">
-          <string>TYPE</string>
+          <string>-</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="0">
+       <item row="3" column="0">
         <widget class="QLabel" name="label_12">
          <property name="text">
           <string>Coordinate:</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="1">
+       <item row="3" column="1">
         <widget class="QLabel" name="coordinateLabel">
          <property name="font">
           <font>
@@ -418,6 +418,26 @@ border-color: black;
          </property>
          <property name="text">
           <string>0.0, 0.0</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLabel" name="label_6">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>-</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>Goal number:</string>
          </property>
         </widget>
        </item>

@@ -51,6 +51,7 @@ class MyPlugin(Plugin):
         # Variables
         self.navStateLabelStyleSheet = self._widget.navigationStateBadgeLabel.styleSheet().split("\n")
         self.goal_list = []
+        self.prev_nav_state = 0
 
         # Service clients
         self.set_active_goal_srv = rospy.ServiceProxy('goal_manager/set_active_goal', SetGpsGoal)
@@ -58,7 +59,7 @@ class MyPlugin(Plugin):
 
         # Topics
         self.cancel_nav_pub = rospy.Publisher("/move_base/cancel", GoalID, queue_size=1)
-        rospy.Subscriber("/led_controller/color", Int8, self.state_cb)
+        rospy.Subscriber("/goal_manager/state", Int8, self.state_cb)
         rospy.Subscriber("goal_manager/distance_to_goal", Float32, self.distance_to_goal_cb)
 
         # Connect buttons
@@ -103,12 +104,14 @@ class MyPlugin(Plugin):
         print(file)
 
         self.goal_list = []
-        with open(file) as csv_file:
-            csv_reader = csv.reader(csv_file, delimiter=",")
-            for i, row in enumerate(csv_reader):
-                if (i != 0):
-                    self.goal_list.append(row)
-        self.show_goal_list()
+
+        if file:
+            with open(file) as csv_file:
+                csv_reader = csv.reader(csv_file, delimiter=",")
+                for i, row in enumerate(csv_reader):
+                    if (i != 0):
+                        self.goal_list.append(row)
+            self.show_goal_list()
 
     def show_goal_list(self):
         self._widget.goalListWidget.clear()
@@ -201,6 +204,8 @@ class MyPlugin(Plugin):
         self.cancel_nav_pub.publish(GoalID())
 
     def state_cb(self, msg):
+        if msg.data == self.prev_nav_state:
+            return
         if msg.data == 0:
             # Off (grey)
             new_color = "grey"
@@ -210,15 +215,16 @@ class MyPlugin(Plugin):
             new_color = "rgb(255, 0, 0)"
             self._widget.navigationStateLabel.setText("Navigating")
         elif msg.data == 2:
-            # Teleoperating (blue)
-            new_color = "rgb(0, 0, 255)"
-            self._widget.navigationStateLabel.setText("Teleoperating")
-        elif msg.data == 3:
             # Goal reached (green)
             new_color = "rgb(0, 255, 0)"
             self._widget.navigationStateLabel.setText("Goal Reached")
+        elif msg.data == 3:
+            # Teleoperating (blue)
+            new_color = "rgb(0, 0, 255)"
+            self._widget.navigationStateLabel.setText("Teleoperating")
         self.change_backgroung_color(new_color)
         self._widget.navigationStateBadgeLabel.setStyleSheet("\n".join(self.navStateLabelStyleSheet))
+        self.prev_nav_state = msg.data
 
     def change_backgroung_color(self, new_color):
         for i, line in enumerate(self.navStateLabelStyleSheet):
